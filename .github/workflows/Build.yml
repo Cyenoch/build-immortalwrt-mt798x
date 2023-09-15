@@ -15,11 +15,11 @@ env:
   FEEDS_CONF: feeds.conf.default
   CONFIG_FILE: .config
   TZ: Asia/Shanghai
-  DEVICE: 360t7
+  DEVICE: NX30PRO
   UPLOAD_OUTPUT: true
 
 jobs:
-   _360t7:
+   _nx30pro:
     runs-on: ubuntu-20.04
     permissions:
       contents: write
@@ -55,8 +55,6 @@ jobs:
       run: |
         cp -f $GITHUB_WORKSPACE/.config $GITHUB_WORKSPACE/openwrt/
         cd openwrt
-        echo "src-git kenzo https://github.com/kenzok8/openwrt-packages" >> ./feeds.conf.default
-        echo "src-git small https://github.com/kenzok8/small" >> ./feeds.conf.default
         ./scripts/feeds update -a
         ./scripts/feeds install -a
         cp -f $GITHUB_WORKSPACE/.config $GITHUB_WORKSPACE/openwrt/
@@ -79,7 +77,7 @@ jobs:
     - name: 编译固件
       run: |
         cd openwrt
-        make -j$(nproc)
+        make V=s -j$(nproc)
         echo "FILE_DATE=$(date +"%Y%m%d%H%M")" >> $GITHUB_ENV
 
     - name : 上传输出文件
